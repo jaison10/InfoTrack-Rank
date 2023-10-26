@@ -15,9 +15,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   rankSearch : Rank = {
     id : '',
     url : '',
-    positions : '1, 2, 3, 15, 35',
-    searchString : ''
+    positions : '',
+    searchString : '',
+    storedInDB : false
   };
+
   hideResultSec : boolean = true;
   rankSec : boolean = true;
   RankResult : string = '';
@@ -39,13 +41,13 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.rankSearch = rankResult;
       this.hideResultSec = false;
       if(rankResult.positions != null && rankResult.positions.length > 0){
-        console.log("RANK EXISTS ");
-        
         this.rankSec = false;
         this.RankResult = 'Search Was Successful!';
+        if(rankResult.storedInDB == true) this.RankResult += ' The History Has Been Recorded!'
       }else{
         this.RankResult = 'Search Was Successful With No Ranks!';
       }
+      
     },(error)=>{
       console.log("Error occured while searching! ", error);
       if(error.status ==  400){
@@ -59,7 +61,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onInputChange(){
-    console.log("TYPED!");
     this.HideTheResult();
   }
   HideTheResult(){

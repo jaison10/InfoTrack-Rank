@@ -52,7 +52,7 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="exampleInputEmail1">The string to be searched</label>
-                <input (input)="onInputChange()" class="form-control" name="search-string" aria-describedby="emailHelp" placeholder="Enter Search String" required [(ngModel)]="rankSearch.searchString">
+                <input required (input)="onInputChange()" class="form-control" name="search-string" aria-describedby="emailHelp" placeholder="Enter Search String" required [(ngModel)]="rankSearch.searchString">
             </div>
         </div>  
 
@@ -64,7 +64,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">www</span>
                     </div>
-                    <input (input)="onInputChange()" name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.url">
+                    <input required (input)="onInputChange()" name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.url">
                 </div>
             </div>
         </div>
