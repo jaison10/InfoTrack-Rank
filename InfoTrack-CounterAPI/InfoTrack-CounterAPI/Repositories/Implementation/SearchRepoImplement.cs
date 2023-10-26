@@ -2,6 +2,7 @@
 using InfoTrack_CounterAPI.Models.Domain;
 using DTO = InfoTrack_CounterAPI.Models.DTO;
 using InfoTrack_CounterAPI.Repositories.Interface;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace InfoTrack_CounterAPI.Repositories.Implementation
 {
@@ -17,6 +18,10 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
         }
         public async Task<string> Search(DTO.SearchRequest searchRequest)
         {
+            if (searchRequest.Url.Length == 0 || searchRequest.SearchString.Length == 0)
+                throw new ArgumentException("Invalid Input!");
+
+            return "1, 2, 3";
 
             string requestUrl = $"https://www.google.co.uk/search?num=100&q={searchRequest.SearchString}";
             HttpResponseMessage response = await client.GetAsync(requestUrl);
@@ -41,7 +46,7 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
 
             var RESULT = await response2.Content.ReadAsStringAsync();
 
-            return null;
+            
         }
 
         public async Task<Rank> StoreRank(DTO.SearchRequest searchRequest, string positions)

@@ -1,0 +1,87 @@
+<!-- <div class="container">
+    <div class="header">
+        <span class="section_header">Search for Rank</span>
+        <button class="btn btn-primary">Check History</button>
+    </div>
+    <form #form="ngForm" class="form-details" onsubmit="searchForRank()">
+        <div class="row">
+            <div class="col col-md-6 mb-3">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">The string to be searched</label>
+                    <input class="form-control" name="search-string" aria-describedby="emailHelp" placeholder="Enter Search String" required [(ngModel)]="rankSearch.searchString">
+                </div>
+            </div>
+        </div>  
+        
+        <div class="form-row">
+            <div class="col col-md-6 mb-3">
+                <label for="exampleFormControlTextarea1">URL to be considered</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">www</span>
+                    </div>
+                    <input name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.url">
+                </div>
+            </div>
+        </div>
+    
+        <button type="submit" class="btn btn-success">Search</button>
+
+        <div class="form-row">
+            <div class="col col-md-6 mb-3">
+                <span class="alert alert-danger">Search Was Successful!</span>
+                <span class="">Ranks : {{rankSearch.positions}}</span>
+            </div>
+        </div>
+      </form>
+</div> -->
+
+
+
+
+<div class="container">
+    <!-- Header Section -->
+    <div class="header">
+        <span class="section_header">Search for Rank</span>
+        <button [routerLink]="['/history']" class="btn btn-primary">Check History</button>
+    </div>
+
+    <!-- Form Section -->
+    <form #form="ngForm" class="form-details" (ngSubmit)="searchForRank()">
+        <!-- Search String Input -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="exampleInputEmail1">The string to be searched</label>
+                <input (input)="onInputChange()" class="form-control" name="search-string" aria-describedby="emailHelp" placeholder="Enter Search String" required [(ngModel)]="rankSearch.searchString">
+            </div>
+        </div>  
+
+        <!-- URL Input -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="exampleFormControlTextarea1">URL to be considered</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">www</span>
+                    </div>
+                    <input (input)="onInputChange()" name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.url">
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Button -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <button type="submit" class="btn btn-success">Search</button>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="row" [hidden]="hideResultSec">
+            <div class="col-md-6 mb-3">
+                <div class="alert">{{RankResult}}</div>
+                <div [hidden]="rankSec">Ranks : {{rankSearch.positions}}</div>
+            </div>
+        </div>
+    </form>
+</div>

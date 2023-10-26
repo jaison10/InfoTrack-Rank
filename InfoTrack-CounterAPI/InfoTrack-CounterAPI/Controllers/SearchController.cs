@@ -17,20 +17,31 @@ namespace InfoTrack_CounterAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Search([FromBody] DTO.SearchRequest searchRequest)
         {
-            var positions =  await searchRepository.Search(searchRequest);
-            if(positions != null)
+            try
             {
-                var domainRank = await searchRepository.StoreRank(searchRequest, positions);
-                var returnVal = new DTO.SearchResult
+                var positions = await searchRepository.Search(searchRequest);
+                if (positions != null)
                 {
-                    Url = searchRequest.Url,
-                    SearchString = searchRequest.SearchString,
-                    Positions = positions,
-                    StoredInDB = (domainRank != null) ? true : false
-                };
-                return Ok(returnVal);
+                    var domainRank = await searchRepository.StoreRank(searchRequest, positions);
+                    var returnVal = new DTO.SearchResult
+                    {
+                        Url = searchRequest.Url,
+                        SearchString = searchRequest.SearchString,
+                        Positions = positions,
+                        StoredInDB = (domainRank != null) ? true : false
+                    };
+                    return Ok(returnVal);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error");
+            }
         }
     }
 }

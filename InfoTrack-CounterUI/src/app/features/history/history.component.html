@@ -1,0 +1,26 @@
+<div class="container">
+    <!-- Header Section -->
+    <div class="header">
+        <span class="section_header">Rank History</span>
+        <button [routerLink]="['/search']" class="btn btn-primary">Search New</button>
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th >Search Item</th>
+            <th >URL</th>
+            <th >Date</th>
+            <th >Ranks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of rankhistory">
+            <td>{{ item.searchString }}</td>
+            <td>{{ item.url }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.positions }}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
