@@ -72,6 +72,18 @@
         <!-- Search Button -->
         <div class="row">
             <div class="col-md-6 mb-3">
+                <label for="exampleFormControlTextarea1">Search Engine</label>
+                <select class="form-select" [(ngModel)]="rankSearch.searchEngineId" name="engine" required>
+                    <option *ngFor="let engine of engines" [value]="engine.id">
+                        {{ engine.engineName }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Search Button -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
                 <button type="submit" class="btn btn-success">Search</button>
             </div>
         </div>

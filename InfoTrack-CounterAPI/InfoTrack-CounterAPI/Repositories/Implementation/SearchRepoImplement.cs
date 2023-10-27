@@ -4,6 +4,7 @@ using DTO = InfoTrack_CounterAPI.Models.DTO;
 using InfoTrack_CounterAPI.Repositories.Interface;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Text;
 
 namespace InfoTrack_CounterAPI.Repositories.Implementation
 {
@@ -11,95 +12,70 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
     {
         private readonly HttpClient _client;
         private readonly RankDbContext rankDbContext;
+        private readonly ISearchEngineRepository searchEngineRepository;
 
-        public SearchRepoImplement(HttpClient client, RankDbContext rankDbContext)
+        public SearchRepoImplement(HttpClient client, RankDbContext rankDbContext, ISearchEngineRepository searchEngineRepository)
         {
             this._client = client;
             this.rankDbContext = rankDbContext;
+            this.searchEngineRepository = searchEngineRepository;
         }
         public async Task<string> Search(DTO.SearchRequest searchRequest)
         {
             if (searchRequest.Url.Length == 0 || searchRequest.SearchString.Length == 0)
                 throw new ArgumentException("Invalid Input!");
 
-            string requestUrl = $"https://www.google.co.uk/search?num=100&q={searchRequest.SearchString.Replace(" ", "+")}";
+            var selectedEngine = await this.searchEngineRepository.GetSearchEngineByIdAsync(searchRequest.SearchEngineId);
+            if (selectedEngine == null) return null;
+
+            var ranks = await this.GetRank(searchRequest, selectedEngine);
+
+            return ranks.ToString();
+        }
+
+        private async Task<string> GetRank(DTO.SearchRequest searchRequest, SearchEngine selectedEngine)
+        {
+            string requestUrl = $"{selectedEngine.Url}q={Uri.EscapeDataString(searchRequest.SearchString)}";
 
             using (HttpClient client = new HttpClient())
             {
                 // trying to overcome cookie request
                 //client.DefaultRequestHeaders.Add("Cookie", "CONSENT=YES+cb");
 
-                HttpResponseMessage response = await client.GetAsync(requestUrl);
-                response.EnsureSuccessStatusCode();
-                //decoding to remove &gt, &lt, etc
-                var dom_content = HttpUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
-                //set the pattern that needs to be searched!
-                var pattern = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))";
+                //Headers
+                //client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent",
+                //    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36");
 
+                //HttpResponseMessage response = await client.GetAsync(requestUrl);
+                //response.EnsureSuccessStatusCode();
+                ////decoding to remove &gt, &lt, etc
+                //var dom_content = HttpUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
+
+                var dom_content = HttpUtility.HtmlDecode(await client.GetStringAsync(requestUrl));
+
+                //set the pattern that needs to be searched!
+                var pattern = selectedEngine.UrlExtractionSyntax;
                 var ranks = "";
                 //finding all the matches
                 MatchCollection matches = Regex.Matches(dom_content, pattern);
 
-                int position = 0;
+                int rank = 0;
                 foreach (Match match in matches)
                 {
                     //obtaining the url from the match found
                     string url = match.Groups[1].Value;
-                    position++;
+                    rank++;
                     //checking if the URL is the URL client looking for
                     if (url.Contains(searchRequest.Url))
                     {
-                        ranks += $"{position.ToString()} , ";
+                        ranks += $"{rank.ToString()} , ";
                     }
                 }
                 client.Dispose();
-                if(ranks.Length > 0) { ranks = ranks.Substring(0, ranks.Length - 1); }
-                //return ranks;
+                if (ranks.Length > 0) { ranks = ranks.Substring(0, ranks.Length - 1); }
+                return ranks;
             }
-
-
-            //var client2 = new HttpClient
-            //{
-            //    BaseAddress = new Uri("https://www.google.co.uk/")
-            //};
-            //client2.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent",
-            //    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36");
-
-            ////var response2 = await client2.GetAsync(searchRequest.SearchString);
-            //requestUrl = $"search?num=100&q={string.Join('+', searchRequest.SearchString.Split(' '))}";
-            //var response2 = await client2.GetAsync(requestUrl);
-
-            //response2.EnsureSuccessStatusCode();
-
-            //client2.Dispose();
-
-
-
-            // BING
-            string bingUrl = $"https://www.bing.com/search?q={Uri.EscapeDataString(searchRequest.SearchString)}";
-            using (HttpClient client = new HttpClient())
-            {
-                string responseContent = await client.GetStringAsync(bingUrl);
-
-                // Use regular expression to find positions of the target URL
-                MatchCollection matches = Regex.Matches(responseContent, "<cite>(.*?)</cite>");
-
-                int position = 0;
-                foreach (Match match in matches)
-                {
-                    string url = match.Groups[1].Value;
-                    position++;
-
-                    if (url.Contains(searchRequest.Url))
-                    {
-                        Console.WriteLine($"The target URL was found at position {position}");
-                        break;
-                    }
-                }
-            }
-            return "";
         }
-
         public async Task<Rank> StoreRank(DTO.SearchRequest searchRequest, string positions)
         {
             var domainVal = new Rank

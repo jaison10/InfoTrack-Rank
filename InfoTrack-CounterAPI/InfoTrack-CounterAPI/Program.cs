@@ -23,6 +23,7 @@ builder.Services.AddDbContext<RankDbContext>(options =>
 // Repositories
 builder.Services.AddScoped<ISearchRepository, SearchRepoImplement>(); 
 builder.Services.AddScoped<IHistoryRepository, HistoryRepoImplement>();
+builder.Services.AddScoped<ISearchEngineRepository, SearchEngineRepoImplement>();
 
 //Adding CORS policy to let others fetch data from this running server.
 builder.Services.AddCors((options) =>

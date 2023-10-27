@@ -9,36 +9,49 @@ namespace InfoTrack_CounterAPI.Controllers
     public class SearchController : Controller
     {
         private readonly ISearchRepository searchRepository;
+        private readonly ISearchEngineRepository searchEngineRepository;
 
-        public SearchController(ISearchRepository searchRepository)
+        public SearchController(ISearchRepository searchRepository, ISearchEngineRepository searchEngineRepository)
         {
             this.searchRepository = searchRepository;
+            this.searchEngineRepository = searchEngineRepository;
         }
         [HttpPost]
         public async Task<IActionResult> Search([FromBody] DTO.SearchRequest searchRequest)
         {
             try
             {
-                var positions = await searchRepository.Search(searchRequest);
-                if (positions != null)
+                //check if the selected search engine present
+                if(await searchEngineRepository.GetSearchEngineByIdAsync(searchRequest.SearchEngineId) != null)
                 {
-                    var domainRank = await searchRepository.StoreRank(searchRequest, positions);
-                    var returnVal = new DTO.SearchResult
+                    // obtaining ranks
+                    var ranks = await searchRepository.Search(searchRequest);
+                    if (ranks != null && ranks.Length > 0)
                     {
-                        Url = searchRequest.Url,
-                        SearchString = searchRequest.SearchString,
-                        Positions = positions,
-                        StoredInDB = (domainRank != null) ? true : false
-                    };
-                    return Ok(returnVal);
+                        // stored the rank details in the DB
+                        var domainRank = await searchRepository.StoreRank(searchRequest, ranks);
+                        var returnVal = new DTO.SearchResult
+                        {
+                            Url = searchRequest.Url,
+                            SearchString = searchRequest.SearchString,
+                            Positions = ranks,
+                            //if value returned after storing, considered as the storage was successful
+                            StoredInDB = (domainRank != null) ? true : false,
+                            SearchEngineId = searchRequest.SearchEngineId
+                        };
+                        return Ok(returnVal);
+                    }
+                    return NotFound();
                 }
-                return NotFound();
+                else {
+                    return NotFound(); 
+                }
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, "Internal Server Error");
             }

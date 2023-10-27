@@ -3,5 +3,6 @@ export interface Rank{
     url : string,
     positions : string,
     searchString : string,
+    searchEngineId : string,
     storedInDB : boolean
 }

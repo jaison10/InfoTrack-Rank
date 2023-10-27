@@ -15,7 +15,7 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
         }
         public async Task<List<Rank>> GetRankHistoryAsync()
         {
-            return await this.rankDbContext.Rank.ToListAsync(); 
+            return await this.rankDbContext.Rank.Include(nameof(SearchEngine)).ToListAsync(); 
         }
     }
 }

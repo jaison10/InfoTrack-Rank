@@ -22,15 +22,23 @@ namespace InfoTrack_CounterAPI.Controllers
             {
                 return NotFound();
             }
+            // converting to DTO Model
             var histories = new List<RankHistory>();
             foreach(var history in rankHistory)
             {
                 histories.Add(new RankHistory
                 {
+                    Id = history.Id,
                     Url = history.Url,
                     SearchString = history.SearchString,
                     Date = history.Date, 
                     Positions = history.Positions,
+                    SearchEngine = new SearchEngine
+                    {
+                        Id = history.SearchEngine.Id,
+                        Url = history.SearchEngine.Url,
+                        EngineName = history.SearchEngine.EngineName
+                    }
                 });
             }
             return Ok(histories);

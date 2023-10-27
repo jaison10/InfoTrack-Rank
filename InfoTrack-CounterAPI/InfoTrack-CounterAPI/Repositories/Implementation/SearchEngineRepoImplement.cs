@@ -17,5 +17,9 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
         {
             return await this.rankDbContext.SearchEngine.ToListAsync();
         }
+        public async Task<SearchEngine> GetSearchEngineByIdAsync(Guid engineId)
+        {
+            return await this.rankDbContext.SearchEngine.FindAsync(engineId);
+        }
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Rank } from '../models/rank-model';
 import { Subscription } from 'rxjs';
 import { RankService } from '../rank.service';
+import { Engine } from '../models/engine-model';
 
 @Component({
   selector: 'app-search',
@@ -17,24 +18,37 @@ export class SearchComponent implements OnInit, OnDestroy {
     url : '',
     positions : '',
     searchString : '',
+    searchEngineId : '',
     storedInDB : false
   };
 
+  engines : Engine[] = [];
   hideResultSec : boolean = true;
   rankSec : boolean = true;
   RankResult : string = '';
 
   private searchRankSubscription ?: Subscription;
+  private engineSubscription ?: Subscription;
 
   ngOnDestroy(): void {
     this.searchRankSubscription?.unsubscribe();
+    this.engineSubscription?.unsubscribe();
   }
   ngOnInit(): void {
+    this.engineSubscription = this.rankService.GetSearchEngines().subscribe((engines)=>{
+      this.engines = engines
+      console.log("Obtained Engines : ", this.engines);
+      
+    }, (error)=>{
+      console.log("Error while fetching search engines! ", error);
+    })
   }
 
   searchForRank(){
     this.HideTheResult();
 
+    console.log("Value going to update : ", this.rankSearch);
+    
     this.searchRankSubscription = this.rankService.SearchForRank(this.rankSearch).subscribe((rankResult)=>{
       console.log("RETURN VALUE : ", rankResult);
       

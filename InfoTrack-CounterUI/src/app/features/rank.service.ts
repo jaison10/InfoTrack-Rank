@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SearchRankRequest } from './models/search-request-model';
 import { RankHistory } from './models/rank-history-model';
 import { environment } from '../../environments/environment';
+import { Engine } from './models/engine-model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,15 @@ export class RankService {
 
   constructor(private httpClient : HttpClient) { }
 
+  GetSearchEngines() : Observable<Engine[]>{
+    return this.httpClient.get<Engine[]>(this.URL + "/SearchEngine");
+  }
+
   SearchForRank(rankSearch : Rank):Observable<Rank>{
     var rankRequest : SearchRankRequest = {
       url : rankSearch.url,
-      searchString : rankSearch.searchString
+      searchString : rankSearch.searchString,
+      searchEngineId : rankSearch.searchEngineId
     };
     return this.httpClient.post<Rank>(this.URL + "/Search", rankRequest);
   }
