@@ -3,6 +3,7 @@ using InfoTrack_CounterAPI.Models.Domain;
 using DTO = InfoTrack_CounterAPI.Models.DTO;
 using InfoTrack_CounterAPI.Repositories.Interface;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace InfoTrack_CounterAPI.Repositories.Implementation
 {
@@ -30,8 +31,8 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
 
                 HttpResponseMessage response = await client.GetAsync(requestUrl);
                 response.EnsureSuccessStatusCode();
-                var dom_content = await response.Content.ReadAsStringAsync();
-
+                //decoding to remove &gt, &lt, etc
+                var dom_content = HttpUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
                 //set the pattern that needs to be searched!
                 var pattern = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))";
 
@@ -53,7 +54,7 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
                 }
                 client.Dispose();
                 if(ranks.Length > 0) { ranks = ranks.Substring(0, ranks.Length - 1); }
-                return ranks;
+                //return ranks;
             }
 
 
@@ -72,6 +73,31 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
 
             //client2.Dispose();
 
+
+
+            // BING
+            string bingUrl = $"https://www.bing.com/search?q={Uri.EscapeDataString(searchRequest.SearchString)}";
+            using (HttpClient client = new HttpClient())
+            {
+                string responseContent = await client.GetStringAsync(bingUrl);
+
+                // Use regular expression to find positions of the target URL
+                MatchCollection matches = Regex.Matches(responseContent, "<cite>(.*?)</cite>");
+
+                int position = 0;
+                foreach (Match match in matches)
+                {
+                    string url = match.Groups[1].Value;
+                    position++;
+
+                    if (url.Contains(searchRequest.Url))
+                    {
+                        Console.WriteLine($"The target URL was found at position {position}");
+                        break;
+                    }
+                }
+            }
+            return "";
         }
 
         public async Task<Rank> StoreRank(DTO.SearchRequest searchRequest, string positions)
@@ -81,7 +107,8 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
                 Url = searchRequest.Url,
                 SearchString = searchRequest.SearchString,
                 Date = new DateTime(),
-                Positions = positions
+                Positions = positions,
+                SearchEngineId = searchRequest.SearchEngineId
             };
             var rank = await rankDbContext.Rank.AddAsync(domainVal);
             await this.rankDbContext.SaveChangesAsync();

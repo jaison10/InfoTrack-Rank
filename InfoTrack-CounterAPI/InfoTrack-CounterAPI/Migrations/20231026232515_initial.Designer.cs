@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoTrack_CounterAPI.Migrations
 {
     [DbContext(typeof(RankDbContext))]
-    [Migration("20231025230620_initial migration")]
-    partial class initialmigration
+    [Migration("20231026232515_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,6 +38,9 @@ namespace InfoTrack_CounterAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("SearchEngineId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("SearchString")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -48,7 +51,39 @@ namespace InfoTrack_CounterAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SearchEngineId");
+
                     b.ToTable("Rank");
+                });
+
+            modelBuilder.Entity("InfoTrack_CounterAPI.Models.Domain.SearchEngine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EngineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlExtractionSyntax")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SearchEngine");
+                });
+
+            modelBuilder.Entity("InfoTrack_CounterAPI.Models.Domain.Rank", b =>
+                {
+                    b.HasOne("InfoTrack_CounterAPI.Models.Domain.SearchEngine", "SearchEngine")
+                        .WithMany()
+                        .HasForeignKey("SearchEngineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SearchEngine");
                 });
 #pragma warning restore 612, 618
         }

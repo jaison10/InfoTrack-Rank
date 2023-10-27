@@ -9,5 +9,6 @@ namespace InfoTrack_CounterAPI.Data
         {
         }
         public DbSet<Rank> Rank { get; set; }
+        public DbSet<SearchEngine> SearchEngine { get; set; }
     }
 }
