@@ -50,7 +50,7 @@
     <form #form="ngForm" class="form-details" (ngSubmit)="searchForRank()">
         <!-- Search String Input -->
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
                 <label for="exampleInputEmail1">The string to be searched</label>
                 <input required (input)="onInputChange()" class="form-control" name="search-string" aria-describedby="emailHelp" placeholder="Enter Search String" required [(ngModel)]="rankSearch.searchString">
             </div>
@@ -58,22 +58,22 @@
 
         <!-- URL Input -->
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="exampleFormControlTextarea1">URL to be considered</label>
+            <div class="col-md-12 mb-3">
+                <label for="exampleFormControlTextarea1">The URL to be considered</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">www</span>
+                      <span class="input-group-text">{{urlInitial}}</span>
                     </div>
-                    <input required (input)="onInputChange()" name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.url">
+                    <input required (input)="onInputChange()" name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.host">
                 </div>
             </div>
         </div>
 
-        <!-- Search Button -->
+        <!-- Search Engine -->
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="exampleFormControlTextarea1">Search Engine</label>
-                <select class="form-select" [(ngModel)]="rankSearch.searchEngineId" name="engine" required>
+                <select class="form-select" [(ngModel)]="rankSearch.searchEngineId" name="engine" (change)="onInputChange()" required>
                     <option *ngFor="let engine of engines" [value]="engine.id">
                         {{ engine.engineName }}
                     </option>
@@ -84,13 +84,13 @@
         <!-- Search Button -->
         <div class="row">
             <div class="col-md-6 mb-3">
-                <button type="submit" class="btn btn-success">Search</button>
+                <button [disabled]="disableSearchButton" type="submit" class="btn btn-success">Search</button>
             </div>
         </div>
 
         <!-- Result Section -->
         <div class="row" [hidden]="hideResultSec">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
                 <div class="alert">{{RankResult}}</div>
                 <div [hidden]="rankSec">Ranks : {{rankSearch.positions}}</div>
             </div>

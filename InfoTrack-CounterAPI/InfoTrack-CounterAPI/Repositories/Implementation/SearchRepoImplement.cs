@@ -26,7 +26,7 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
                 throw new ArgumentException("Invalid Input!");
 
             var selectedEngine = await this.searchEngineRepository.GetSearchEngineByIdAsync(searchRequest.SearchEngineId);
-            if (selectedEngine == null) return null;
+            if (selectedEngine == null)  throw new ArgumentException("Invalid Search Engine Input!");
 
             var ranks = await this.GetRank(searchRequest, selectedEngine);
 
@@ -68,11 +68,11 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
                     //checking if the URL is the URL client looking for
                     if (url.Contains(searchRequest.Url))
                     {
-                        ranks += $"{rank.ToString()} , ";
+                        ranks += $"{rank.ToString()}, ";
                     }
                 }
                 client.Dispose();
-                if (ranks.Length > 0) { ranks = ranks.Substring(0, ranks.Length - 1); }
+                if (ranks.Length > 0) { ranks = ranks.Substring(0, ranks.Length - 2); }
                 return ranks;
             }
         }
@@ -82,7 +82,7 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
             {
                 Url = searchRequest.Url,
                 SearchString = searchRequest.SearchString,
-                Date = new DateTime(),
+                Date = DateTime.Now,
                 Positions = positions,
                 SearchEngineId = searchRequest.SearchEngineId
             };

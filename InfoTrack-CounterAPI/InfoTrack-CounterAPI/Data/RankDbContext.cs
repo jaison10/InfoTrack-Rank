@@ -10,5 +10,25 @@ namespace InfoTrack_CounterAPI.Data
         }
         public DbSet<Rank> Rank { get; set; }
         public DbSet<SearchEngine> SearchEngine { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Add the configuration for your entities here
+            modelBuilder.Entity<SearchEngine>().HasData(
+                new SearchEngine { 
+                    Id = Guid.NewGuid(),
+                    EngineName = "Bing",
+                    Url = "https://www.bing.com/search?num=", 
+                    UrlExtractionSyntax = "<cite>(.*?)</cite>"
+                },
+                new SearchEngine { 
+                    Id = Guid.NewGuid(), 
+                    EngineName = "Google",
+                    Url = "https://www.google.co.uk/search?count=",
+                    UrlExtractionSyntax = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))"
+                }
+            );
+        }
     }
 }

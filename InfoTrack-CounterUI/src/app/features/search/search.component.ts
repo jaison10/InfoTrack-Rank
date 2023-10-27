@@ -15,6 +15,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   rankSearch : Rank = {
     id : '',
+    host:'',
     url : '',
     positions : '',
     searchString : '',
@@ -22,9 +23,11 @@ export class SearchComponent implements OnInit, OnDestroy {
     storedInDB : false
   };
 
+  urlInitial : string = 'www.';
   engines : Engine[] = [];
   hideResultSec : boolean = true;
   rankSec : boolean = true;
+  disableSearchButton : boolean = false;
   RankResult : string = '';
 
   private searchRankSubscription ?: Subscription;
@@ -38,7 +41,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.engineSubscription = this.rankService.GetSearchEngines().subscribe((engines)=>{
       this.engines = engines
       console.log("Obtained Engines : ", this.engines);
-      
+      // assigning the default Search Engine
+      if(this.engines.length > 0){
+        this.rankSearch.searchEngineId = this.engines[0].id;
+      }
     }, (error)=>{
       console.log("Error while fetching search engines! ", error);
     })
@@ -48,12 +54,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.HideTheResult();
 
     console.log("Value going to update : ", this.rankSearch);
-    
+    // disabling the search button
+    this.disableSearchButton = true;
+    // combining to prepare the URL.
+    this.rankSearch.url = this.urlInitial + this.rankSearch.host;
     this.searchRankSubscription = this.rankService.SearchForRank(this.rankSearch).subscribe((rankResult)=>{
-      console.log("RETURN VALUE : ", rankResult);
-      
       this.rankSearch = rankResult;
       this.hideResultSec = false;
+      // customizing the result to be displayed to be more user friendly.
       if(rankResult.positions != null && rankResult.positions.length > 0){
         this.rankSec = false;
         this.RankResult = 'Search Was Successful!';
@@ -61,7 +69,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       }else{
         this.RankResult = 'Search Was Successful With No Ranks!';
       }
-      
+      // enabling the search button
+      this.disableSearchButton = false;
     },(error)=>{
       console.log("Error occured while searching! ", error);
       if(error.status ==  400){
@@ -71,6 +80,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       }
       this.hideResultSec = false;
       this.rankSec = true;
+      // enabling the search button
+      this.disableSearchButton = false;
     });
   }
 
@@ -78,6 +89,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.HideTheResult();
   }
   HideTheResult(){
+    // hiding the result section
     if(this.hideResultSec == false){
       this.hideResultSec = true;
       this.rankSec = true;

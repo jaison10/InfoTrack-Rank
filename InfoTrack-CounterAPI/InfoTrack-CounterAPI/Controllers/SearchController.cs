@@ -21,31 +21,24 @@ namespace InfoTrack_CounterAPI.Controllers
         {
             try
             {
-                //check if the selected search engine present
-                if(await searchEngineRepository.GetSearchEngineByIdAsync(searchRequest.SearchEngineId) != null)
+                // obtaining ranks
+                var ranks = await searchRepository.Search(searchRequest);
+                // creating dto for return value
+                var returnVal = new DTO.SearchResult
                 {
-                    // obtaining ranks
-                    var ranks = await searchRepository.Search(searchRequest);
-                    if (ranks != null && ranks.Length > 0)
-                    {
-                        // stored the rank details in the DB
-                        var domainRank = await searchRepository.StoreRank(searchRequest, ranks);
-                        var returnVal = new DTO.SearchResult
-                        {
-                            Url = searchRequest.Url,
-                            SearchString = searchRequest.SearchString,
-                            Positions = ranks,
-                            //if value returned after storing, considered as the storage was successful
-                            StoredInDB = (domainRank != null) ? true : false,
-                            SearchEngineId = searchRequest.SearchEngineId
-                        };
-                        return Ok(returnVal);
-                    }
-                    return NotFound();
+                    Url = searchRequest.Url,
+                    SearchString = searchRequest.SearchString,
+                    Positions = ranks,
+                    SearchEngineId = searchRequest.SearchEngineId
+                };
+                if (ranks != null && ranks.Length > 0)
+                {
+                    // stored the rank details in the DB
+                    var domainRank = await searchRepository.StoreRank(searchRequest, ranks);
+                    //if value returned after storing, considered as the storage was successful
+                    returnVal.StoredInDB = (domainRank != null) ? true : false;
                 }
-                else {
-                    return NotFound(); 
-                }
+                return Ok(returnVal);
             }
             catch (ArgumentException ex)
             {
