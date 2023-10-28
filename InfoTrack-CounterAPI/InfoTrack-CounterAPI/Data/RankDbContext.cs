@@ -19,13 +19,13 @@ namespace InfoTrack_CounterAPI.Data
                 new SearchEngine { 
                     Id = Guid.NewGuid(),
                     EngineName = "Bing",
-                    Url = "https://www.bing.com/search?num=", 
+                    Url = "https://www.bing.com/search?count=", 
                     UrlExtractionSyntax = "<cite>(.*?)</cite>"
                 },
                 new SearchEngine { 
                     Id = Guid.NewGuid(), 
                     EngineName = "Google",
-                    Url = "https://www.google.co.uk/search?count=",
+                    Url = "https://www.google.co.uk/search?num=",
                     UrlExtractionSyntax = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))"
                 }
             );

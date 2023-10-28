@@ -1,8 +1,16 @@
 <div class="container">
     <!-- Header Section -->
     <div class="header">
-        <span class="section_header">Rank History</span>
-        <button [routerLink]="['/search']" class="btn btn-primary">Search New</button>
+        <h3 class="section_header">Rank History</h3>
+        <div class="newbutton-textbox">
+          <div class="textbox-outer">
+            <input type="text" [(ngModel)]="filterString" (keyup)="filterRanks()">
+            <span>search string</span>
+          </div>
+          <div class="addnew-button">
+            <button [routerLink]="['/search']" class="btn btn-primary">Search New</button>
+          </div>
+        </div>
     </div>
 
     <table class="table table-bordered">
@@ -16,7 +24,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of rankhistory">
+          <tr *ngFor="let item of filteredRanks">
             <td>{{ item.searchString }}</td>
             <td>{{ item.url }}</td>
             <td>{{ item.searchEngine.engineName }}</td>

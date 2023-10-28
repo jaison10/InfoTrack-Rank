@@ -12,7 +12,9 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
   constructor(private rankService : RankService){}
 
+  filterString : string = '';
   rankhistory : RankHistory [] = [];
+  filteredRanks = [...this.rankhistory]; // Create a copy for filtering
   private searchRankSubscription ?: Subscription;
 
   ngOnDestroy(): void {
@@ -21,9 +23,19 @@ export class HistoryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.searchRankSubscription = this.rankService.GetRankHistory().subscribe((rankResult)=>{
       this.rankhistory = rankResult;
+      this.filteredRanks = rankResult;
     },(error)=>{
       console.log("Error occured while searching! ", error);
     });
   }
-
+  filterRanks(){
+    if(this.filterString.length > 0){
+      this.filteredRanks = this.rankhistory.filter(item =>
+        item.url.toLowerCase().includes(this.filterString.toLowerCase()) ||
+        item.searchString.toLowerCase().includes(this.filterString.toLowerCase())
+      );
+    }else{
+      this.filteredRanks = this.rankhistory;
+    }  
+  }
 }

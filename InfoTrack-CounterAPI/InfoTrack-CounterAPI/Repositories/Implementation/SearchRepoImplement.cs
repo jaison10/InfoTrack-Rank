@@ -13,7 +13,8 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
         private readonly HttpClient _client;
         private readonly RankDbContext rankDbContext;
         private readonly ISearchEngineRepository searchEngineRepository;
-
+        private readonly int NoOfItems = 100;
+        private readonly string Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36";
         public SearchRepoImplement(HttpClient client, RankDbContext rankDbContext, ISearchEngineRepository searchEngineRepository)
         {
             this._client = client;
@@ -35,23 +36,20 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
 
         private async Task<string> GetRank(DTO.SearchRequest searchRequest, SearchEngine selectedEngine)
         {
-            string requestUrl = $"{selectedEngine.Url}q={Uri.EscapeDataString(searchRequest.SearchString)}";
+            string requestUrl = $"{selectedEngine.Url}{NoOfItems}&q={Uri.EscapeDataString(searchRequest.SearchString)}";
 
             using (HttpClient client = new HttpClient())
             {
                 // trying to overcome cookie request
                 //client.DefaultRequestHeaders.Add("Cookie", "CONSENT=YES+cb");
 
-                //Headers
-                //client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent",
-                //    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36");
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", Agent);
 
-                //HttpResponseMessage response = await client.GetAsync(requestUrl);
-                //response.EnsureSuccessStatusCode();
-                ////decoding to remove &gt, &lt, etc
-                //var dom_content = HttpUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
-
-                var dom_content = HttpUtility.HtmlDecode(await client.GetStringAsync(requestUrl));
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
+                response.EnsureSuccessStatusCode();
+                //decoding to remove &gt, &lt, etc
+                var dom_content = HttpUtility.HtmlDecode(await response.Content.ReadAsStringAsync());
+                //var dom_content = HttpUtility.HtmlDecode(await client.GetStringAsync(requestUrl));
 
                 //set the pattern that needs to be searched!
                 var pattern = selectedEngine.UrlExtractionSyntax;

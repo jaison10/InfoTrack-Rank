@@ -22,3 +22,70 @@
 table{
   margin-top: 2%;
 }
+
+.section_header{
+  display: grid;
+  align-items: center;
+}
+
+/* BUTTON and INPUT */
+
+
+.newbutton-textbox{
+  display: flex;
+  width: auto;
+}
+
+.addnew-button{
+  padding-top: 10px;
+  padding-right: 5px ;
+}
+
+.textbox-outer{
+  padding: 10px 0 10px 0;
+  position: relative;
+  width: 200px;
+}
+
+.textbox-outer input{
+  width: 95%;
+  height: 2.3em;
+  background-color: #fff;
+  border: 1px solid #171616;
+  border-radius: 5px;
+  outline: none;
+  font-size: 1em;
+  color: #0f0f0f;
+  transition: 0.5s;
+}
+
+.textbox-outer span{
+  padding: 7px;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  color: #0e0d0d;
+  font-size: 1em;
+  transition: 0.4s;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.textbox-outer input:focus ~span{
+  color: #0cbac0;
+  background-color: #fff;
+
+  /* color:#fff;
+  background-color: #0cbac0; */
+
+  transform: translateX(10px) translateY(-9px);
+  font-size: 0.7em;
+  padding: 0px 0px;
+  /* border-left: 1px solid #0cbac0;
+  border-right: 1px solid #0cbac0; */
+  letter-spacing: 0.1em;
+}
+
+.textbox-outer input:focus{
+  border: 1px solid #0cbac0;
+}
