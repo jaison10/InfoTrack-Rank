@@ -1,48 +1,7 @@
-<!-- <div class="container">
-    <div class="header">
-        <span class="section_header">Search for Rank</span>
-        <button class="btn btn-primary">Check History</button>
-    </div>
-    <form #form="ngForm" class="form-details" onsubmit="searchForRank()">
-        <div class="row">
-            <div class="col col-md-6 mb-3">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">The string to be searched</label>
-                    <input class="form-control" name="search-string" aria-describedby="emailHelp" placeholder="Enter Search String" required [(ngModel)]="rankSearch.searchString">
-                </div>
-            </div>
-        </div>  
-        
-        <div class="form-row">
-            <div class="col col-md-6 mb-3">
-                <label for="exampleFormControlTextarea1">URL to be considered</label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">www</span>
-                    </div>
-                    <input name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.url">
-                </div>
-            </div>
-        </div>
-    
-        <button type="submit" class="btn btn-success">Search</button>
-
-        <div class="form-row">
-            <div class="col col-md-6 mb-3">
-                <span class="alert alert-danger">Search Was Successful!</span>
-                <span class="">Ranks : {{rankSearch.positions}}</span>
-            </div>
-        </div>
-      </form>
-</div> -->
-
-
-
-
 <div class="container">
     <!-- Header Section -->
     <div class="header">
-        <span class="section_header">Search for Rank</span>
+        <h4 class="section_header">Search for Rank</h4>
         <button [routerLink]="['/history']" class="btn btn-primary">Check History</button>
     </div>
 

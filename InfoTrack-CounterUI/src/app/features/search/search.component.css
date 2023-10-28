@@ -25,6 +25,11 @@
     padding-left: 20px;
 }
 
+.section_header{
+  display: grid;
+  align-items: center;
+}
+
 
 
 
