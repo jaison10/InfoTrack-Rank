@@ -56,7 +56,11 @@ export class SearchComponent implements OnInit, OnDestroy {
     // disabling the search button
     this.disableSearchButton = true;
     // combining to prepare the URL.
-    this.rankSearch.url = this.selectedSubDomain + this.rankSearch.host;
+    if(this.rankSearch.host.length == 0){
+      this.rankSearch.url = '';  
+    }else{
+      this.rankSearch.url = this.selectedSubDomain + this.rankSearch.host;
+    }
     this.searchRankSubscription = this.rankService.SearchForRank(this.rankSearch).subscribe((rankResult)=>{      
       this.rankSearch = rankResult;
       this.rankSearch.host = this.rankSearch.url.substring(this.selectedSubDomain.length);
