@@ -1,5 +1,6 @@
 # InfoTrack-Rank
 This application is designed to retrieve search engine results and determine the rank of a specific URL within those search results. If the rank is identified, it will be saved in the MSSQL server for historical records. 
+Note: The records will be stored only if Ranks are found.
 ## API : 
 The API is built using .Net 7.0, EF Core, LINQ operations, and Repositories for robust functionality. 
 #### Setup:
@@ -13,7 +14,7 @@ The API is built using .Net 7.0, EF Core, LINQ operations, and Repositories for 
 5. Run the application and test on Swagger.
 
 ## SPA : 
-The front end of the same is built using Angular, TypeScript, RxJS, and Bootstrap.
+The front end of the same is built using Angular, TypeScript, RxJS, and Bootstrap. Validations not handled in the front-end as of now as it is handled in the API.
 #### Setup:
 1. Run 'npm install' to install the project dependencies.
 2. Run 'ng serve' to run the application.
