@@ -31,7 +31,7 @@ namespace InfoTrack_CounterAPI.Controllers
                     Id = history.Id,
                     Url = history.Url,
                     SearchString = history.SearchString,
-                    Date = history.Date, 
+                    Date = history.ToString("yyyy-MM-dd HH:mm:ss"), 
                     Positions = history.Positions,
                     SearchEngine = new SearchEngine
                     {
