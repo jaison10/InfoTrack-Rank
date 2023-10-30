@@ -22,7 +22,7 @@
                 <div class="input-group">
                     <div class="input-group-prepend">
                       <!-- <span class="input-group-text">{{urlInitial}}</span> -->
-                      <select class="form-select" [(ngModel)]="selectedSubDomain" name="subdomain" (change)="onInputChange()" required>
+                      <select class="input-group-text domainSelect" [(ngModel)]="selectedSubDomain" name="subdomain" (change)="onInputChange()" required>
                         <option *ngFor="let domain of subDomains" [selected]="domain == 'www.'" [value]="domain">
                             {{ domain }}
                         </option>

@@ -4,7 +4,6 @@ import { Rank } from './models/rank-model';
 import { Observable } from 'rxjs';
 import { SearchRankRequest } from './models/search-request-model';
 import { RankHistory } from './models/rank-history-model';
-import { environment } from '../../environments/environment';
 import { Engine } from './models/engine-model';
 
 @Injectable({
