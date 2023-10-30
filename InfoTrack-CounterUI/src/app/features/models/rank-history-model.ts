@@ -5,6 +5,6 @@ export interface RankHistory{
     url : string,
     positions : string,
     searchString : string,
-    date : Date,
+    date : string,
     searchEngine : Engine
 }
