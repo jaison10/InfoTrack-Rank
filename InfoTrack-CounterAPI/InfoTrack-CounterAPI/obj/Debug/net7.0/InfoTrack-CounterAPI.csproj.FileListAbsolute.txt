@@ -74,3 +74,5 @@ F:\InfoTrack\InfoTrack-ResultCounter\InfoTrack-CounterAPI\InfoTrack-CounterAPI\b
 F:\InfoTrack\InfoTrack-ResultCounter\InfoTrack-CounterAPI\InfoTrack-CounterAPI\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
 F:\InfoTrack\InfoTrack-ResultCounter\InfoTrack-CounterAPI\InfoTrack-CounterAPI\bin\Debug\net7.0\Mono.TextTemplating.dll
 F:\InfoTrack\InfoTrack-ResultCounter\InfoTrack-CounterAPI\InfoTrack-CounterAPI\bin\Debug\net7.0\System.CodeDom.dll
+F:\InfoTrack\InfoTrack-ResultCounter\InfoTrack-CounterAPI\InfoTrack-CounterAPI\bin\Debug\net7.0\AutoMapper.dll
+F:\InfoTrack\InfoTrack-ResultCounter\InfoTrack-CounterAPI\InfoTrack-CounterAPI\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

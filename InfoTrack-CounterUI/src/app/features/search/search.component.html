@@ -21,7 +21,12 @@
                 <label for="exampleFormControlTextarea1">The URL to be considered</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">{{urlInitial}}</span>
+                      <!-- <span class="input-group-text">{{urlInitial}}</span> -->
+                      <select class="form-select" [(ngModel)]="selectedSubDomain" name="subdomain" (change)="onInputChange()" required>
+                        <option *ngFor="let domain of subDomains" [selected]="domain == 'www.'" [value]="domain">
+                            {{ domain }}
+                        </option>
+                    </select>
                     </div>
                     <input required (input)="onInputChange()" name="url" type="text" class="form-control" placeholder="URL" aria-describedby="inputGroupPrepend2" required [(ngModel)]="rankSearch.host">
                 </div>
@@ -50,7 +55,7 @@
         <!-- Result Section -->
         <div class="row" [hidden]="hideResultSec">
             <div class="col-md-12 mb-3">
-                <div class="alert">{{RankResult}}</div>
+                <div class="alert" [class]="alertClass">{{RankResult}}</div>
                 <div [hidden]="rankSec">Ranks : {{rankSearch.positions}}</div>
             </div>
         </div>

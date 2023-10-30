@@ -4,7 +4,6 @@ using DTO = InfoTrack_CounterAPI.Models.DTO;
 using InfoTrack_CounterAPI.Repositories.Interface;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Text;
 
 namespace InfoTrack_CounterAPI.Repositories.Implementation
 {
@@ -15,7 +14,10 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
         private readonly ISearchEngineRepository searchEngineRepository;
         private readonly int NoOfItems = 100;
         private readonly string Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36";
-        public SearchRepoImplement(HttpClient client, RankDbContext rankDbContext, ISearchEngineRepository searchEngineRepository)
+        public SearchRepoImplement(
+            HttpClient client, 
+            RankDbContext rankDbContext, 
+            ISearchEngineRepository searchEngineRepository)
         {
             this._client = client;
             this.rankDbContext = rankDbContext;
@@ -53,17 +55,17 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
 
                 //set the pattern that needs to be searched!
                 var pattern = selectedEngine.UrlExtractionSyntax;
-                var ranks = "";
                 //finding all the matches
                 MatchCollection matches = Regex.Matches(dom_content, pattern);
 
+                var ranks = "";
                 int rank = 0;
                 foreach (Match match in matches)
                 {
                     //obtaining the url from the match found
                     string url = match.Groups[1].Value;
                     rank++;
-                    //checking if the URL is the URL client looking for
+                    //checking if the obtained URL is the URL client looking for
                     if (url.Contains(searchRequest.Url))
                     {
                         ranks += $"{rank.ToString()}, ";

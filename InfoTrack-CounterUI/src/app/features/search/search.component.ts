@@ -23,8 +23,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     storedInDB : false
   };
 
-  urlInitial : string = 'www.';
+  selectedSubDomain : string = "www.";
+  alertClass : string = "alert-info";
   engines : Engine[] = [];
+  subDomains : string[] = ["www.", "http://", "https://"];
   hideResultSec : boolean = true;
   rankSec : boolean = true;
   disableSearchButton : boolean = false;
@@ -40,7 +42,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.engineSubscription = this.rankService.GetSearchEngines().subscribe((engines)=>{
       this.engines = engines
-      console.log("Obtained Engines : ", this.engines);
       // assigning the default Search Engine
       if(this.engines.length > 0){
         this.rankSearch.searchEngineId = this.engines[0].id;
@@ -52,27 +53,28 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   searchForRank(){
     this.HideTheResult();
-
-    console.log("Value going to update : ", this.rankSearch);
     // disabling the search button
     this.disableSearchButton = true;
     // combining to prepare the URL.
-    this.rankSearch.url = this.urlInitial + this.rankSearch.host;
-    this.searchRankSubscription = this.rankService.SearchForRank(this.rankSearch).subscribe((rankResult)=>{
+    this.rankSearch.url = this.selectedSubDomain + this.rankSearch.host;
+    this.searchRankSubscription = this.rankService.SearchForRank(this.rankSearch).subscribe((rankResult)=>{      
       this.rankSearch = rankResult;
+      this.rankSearch.host = this.rankSearch.url.substring(this.selectedSubDomain.length);
       this.hideResultSec = false;
-      // customizing the result to be displayed to be more user friendly.
+      // customizing the result to be displayed to be more user friendly.      
+      this.RankResult = 'Search Was Successful!';
       if(rankResult.positions != null && rankResult.positions.length > 0){
         this.rankSec = false;
-        this.RankResult = 'Search Was Successful!';
+        this.alertClass = "alert-success";
         if(rankResult.storedInDB == true) this.RankResult += ' The History Has Been Recorded!'
       }else{
-        this.RankResult = 'Search Was Successful With No Ranks!';
+        this.RankResult += ' No Ranks Found!';
+        this.alertClass = "alert-info";
       }
       // enabling the search button
       this.disableSearchButton = false;
     },(error)=>{
-      console.log("Error occured while searching! ", error);
+      this.alertClass = "alert-danger";
       if(error.status ==  400){
         this.RankResult = 'Invalid Input!';
       }else{
