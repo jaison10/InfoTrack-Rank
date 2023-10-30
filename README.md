@@ -1,6 +1,7 @@
 # InfoTrack-Rank
 This application is designed to retrieve search engine results and determine the rank of a specific URL within those search results. If the rank is identified, it will be saved in the MSSQL server for historical records. 
-Note: The records will be stored only if Ranks are found.
+<br>
+Note: The records will be stored only if the Ranks are found.
 ## API : 
 The API is built using .Net 7.0, EF Core, LINQ operations, and Repositories for robust functionality. 
 #### Setup:
