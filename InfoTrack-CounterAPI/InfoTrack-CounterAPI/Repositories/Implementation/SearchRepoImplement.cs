@@ -9,17 +9,14 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
 {
     public class SearchRepoImplement : ISearchRepository
     {
-        private readonly HttpClient _client;
         private readonly RankDbContext rankDbContext;
         private readonly ISearchEngineRepository searchEngineRepository;
         private readonly int NoOfItems = 100;
         private readonly string Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36";
         public SearchRepoImplement(
-            HttpClient client, 
             RankDbContext rankDbContext, 
             ISearchEngineRepository searchEngineRepository)
         {
-            this._client = client;
             this.rankDbContext = rankDbContext;
             this.searchEngineRepository = searchEngineRepository;
         }
@@ -87,8 +84,8 @@ namespace InfoTrack_CounterAPI.Repositories.Implementation
                 SearchEngineId = searchRequest.SearchEngineId
             };
             var rank = await rankDbContext.Rank.AddAsync(domainVal);
-            await this.rankDbContext.SaveChangesAsync();
             if (rank == null) { return null; }
+            await this.rankDbContext.SaveChangesAsync();
             return rank.Entity;
         }
 
