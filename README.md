@@ -14,7 +14,7 @@ The API is built using .Net 7.0, EF Core, LINQ operations, and Repositories for 
 5. Run the application and test on Swagger.
 
 ## SPA : 
-The front end of the same is built using Angular, TypeScript, RxJS, and Bootstrap. Validations not handled in the front-end as of now as it is handled in the API.
+The front end of the same is built using Angular, TypeScript, RxJS, and Bootstrap. Validations are not handled in the front-end as of now as it is handled in the API.
 #### Setup:
 1. Run 'npm install' to install the project dependencies.
 2. Run 'ng serve' to run the application.
