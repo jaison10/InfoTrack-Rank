@@ -1,4 +1,4 @@
-# InfoTrack-Rank
+# SearchRank Analyzer: Webpage Position Tracker
 This application is designed to retrieve search engine results and determine the rank of a specific URL within those search results. If the rank is identified, it will be saved in the MSSQL server for historical records. 
 <br>
 Note: The records will be stored only if the Ranks are found.
